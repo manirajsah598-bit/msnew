@@ -1,0 +1,105 @@
+<!DOCTYPE html><html><head><title>Wins Agro Development</title><meta name="viewport" content="width=device-width, initial-scale=1"><style>body{font-family:Arial;background:#e8f5e9;text-align:center}h1{color:green}section{background:#fff;margin:10px;padding:15px;border-radius:10px;box-shadow:0 0 5px #aaa}button{padding:10px;margin:5px;background:green;color:#fff;border:none;border-radius:5px}input{padding:5px;margin:5px}</style></head><body>
+
+<h1>🌾 Wins Agro Development</h1>
+
+<section>
+<h2>📷 Crop Scanner (Camera)</h2>
+<video id="video" width="300" height="200" autoplay></video><br>
+<button onclick="startCamera()">Start Camera</button>
+<p id="scanResult">Scan result: Not detected</p>
+</section>
+
+<section>
+<h2>🌦 Real-Time Weather</h2>
+<button onclick="getWeather()">Get Weather</button>
+<p id="weather"></p>
+</section>
+
+<section>
+<h2>📊 Crop Market Prices</h2>
+<select id="crop">
+<option>Wheat</option>
+<option>Rice</option>
+<option>Maize</option>
+<option>Barley</option>
+<option>Vegetables</option>
+</select>
+<button onclick="getMarket()">Check Price</button>
+<p id="market"></p>
+</section>
+
+<section>
+<h2>💧 Soil Moisture Analysis</h2>
+<input type="number" id="moisture" placeholder="Enter moisture %">
+<button onclick="checkSoil()">Analyze</button>
+<p id="soil"></p>
+</section>
+
+<section>
+<h2>🧪 Fertilizer Calculator</h2>
+<input type="number" id="land" placeholder="Land (acre)">
+<button onclick="calcFertilizer()">Calculate</button>
+<p id="fert"></p>
+</section>
+
+<section>
+<h2>🚰 Water Supply Timer</h2>
+<input type="time" id="waterTime">
+<button onclick="setWater()">Set Time</button>
+<p id="water"></p>
+</section>
+
+<section>
+<h2>🥕 Vegetables List</h2>
+<p>Potato, Tomato, Onion, Carrot, Spinach, Cabbage, Cauliflower, Peas, Brinjal</p>
+</section>
+
+<script>
+function startCamera(){
+navigator.mediaDevices.getUserMedia({video:true})
+.then(stream=>{
+document.getElementById("video").srcObject=stream;
+document.getElementById("scanResult").innerText="Scanning... (Demo AI detection: Wheat detected 🌾)";
+});
+}
+
+function getWeather(){
+fetch("https://api.open-meteo.com/v1/forecast?latitude=28.4&longitude=77.0&current_weather=true")
+.then(res=>res.json())
+.then(data=>{
+document.getElementById("weather").innerText=
+"Temp: "+data.current_weather.temperature+"°C, Wind: "+data.current_weather.windspeed;
+});
+}
+
+function getMarket(){
+let crop=document.getElementById("crop").value;
+let price={
+"Wheat":"₹2200/quintal",
+"Rice":"₹3000/quintal",
+"Maize":"₹1800/quintal",
+"Barley":"₹1600/quintal",
+"Vegetables":"₹1000–3000/quintal"
+};
+document.getElementById("market").innerText=crop+" Price: "+price[crop];
+}
+
+function checkSoil(){
+let m=document.getElementById("moisture").value;
+let result = m<30?"Dry soil ❌":"Good moisture ✅";
+document.getElementById("soil").innerText=result;
+}
+
+function calcFertilizer(){
+let land=document.getElementById("land").value;
+let fert=land*50;
+document.getElementById("fert").innerText="Use approx "+fert+" kg fertilizer safely";
+}
+
+function setWater(){
+let t=document.getElementById("waterTime").value;
+document.getElementById("water").innerText="Watering scheduled at "+t;
+}
+</script>
+
+</body></html>
