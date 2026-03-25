@@ -1,0 +1,163 @@
+<!DOCTYPE html><html><head><title>Wins Agro Development</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body{margin:0;font-family:Arial;background:#eef5f1}
+.header{background:#1b5e20;color:#fff;padding:15px;text-align:center;font-size:24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:15px;padding:15px}
+.card{background:#fff;padding:15px;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.2)}
+button{padding:8px 12px;background:#1b5e20;color:white;border:none;border-radius:5px}
+input,select{padding:6px;margin:5px;width:90%}
+.alert{color:red;font-weight:bold}
+.good{color:green}
+</style></head><body>
+
+<div class="header">🌾 Wins Agro Startup</div>
+
+<div class="grid">
+
+<div class="card">
+<h3>📷 Live Crop Scanner</h3>
+<video id="cam" width="100%" autoplay></video>
+<button onclick="startCam()">Start Camera</button>
+<p id="scan">AI: Waiting...</p>
+</div>
+
+<div class="card">
+<h3>🌦 Weather + Advice</h3>
+<button onclick="weather()">Check Weather</button>
+<p id="weather"></p>
+<p id="advice"></p>
+</div>
+
+<div class="card">
+<h3>📊 Market Trends</h3>
+<select id="crop">
+<option>Wheat</option><option>Rice</option><option>Maize</option>
+</select>
+<button onclick="market()">Check</button>
+<p id="market"></p>
+<canvas id="chart"></canvas>
+</div>
+
+<div class="card">
+<h3>💧 Soil Intelligence</h3>
+<input type="number" id="soil" placeholder="Moisture %">
+<button onclick="soilCheck()">Analyze</button>
+<p id="soilRes"></p>
+</div>
+
+<div class="card">
+<h3>🧪 Smart Fertilizer AI</h3>
+<input type="number" id="land" placeholder="Land">
+<select id="type"><option>Wheat</option><option>Rice</option></select>
+<button onclick="fert()">Calculate</button>
+<p id="fertRes"></p>
+</div>
+
+<div class="card">
+<h3>🚰 Smart Irrigation</h3>
+<input type="time" id="time">
+<button onclick="water()">Schedule</button>
+<p id="waterRes"></p>
+</div>
+
+<div class="card">
+<h3>📅 Crop Planner AI</h3>
+<select id="season">
+<option>winter</option><option>rainy</option>
+</select>
+<button onclick="plan()">Suggest</button>
+<p id="planRes"></p>
+</div>
+
+<div class="card">
+<h3>📈 Profit AI</h3>
+<input type="number" id="cost" placeholder="Cost">
+<input type="number" id="yield" placeholder="Yield">
+<button onclick="profit()">Calculate</button>
+<p id="profitRes"></p>
+</div>
+
+<div class="card">
+<h3>🔔 Smart Alerts</h3>
+<p id="alertBox">No alerts</p>
+</div>
+
+
+</div>
+
+<script>
+
+function startCam(){
+navigator.mediaDevices.getUserMedia({video:true})
+.then(s=>{document.getElementById("cam").srcObject=s;
+document.getElementById("scan").innerText="AI: Healthy Crop 🌱";});
+}
+
+function weather(){
+fetch("https://api.open-meteo.com/v1/forecast?latitude=28.4&longitude=77.0&current_weather=true")
+.then(r=>r.json()).then(d=>{
+let t=d.current_weather.temperature;
+document.getElementById("weather").innerText="Temp: "+t+"°C";
+let adv = t>35?"High heat ⚠ Water crops":"Good weather ✅";
+document.getElementById("advice").innerText=adv;
+});
+}
+
+function market(){
+let c=document.getElementById("crop").value;
+let prices=[2000,2200,2100,2300];
+document.getElementById("market").innerText=c+" Price: ₹"+prices[0];
+
+new Chart(document.getElementById("chart"),{
+type:'line',
+data:{labels:["Mon","Tue","Wed","Thu"],
+datasets:[{label:"Price",data:prices}]}
+});
+}
+
+function soilCheck(){
+let m=document.getElementById("soil").value;
+let res=m<30?"Dry ❌":"Good ✅";
+document.getElementById("soilRes").innerHTML=res;
+if(m<30) document.getElementById("alertBox").innerText="⚠ Irrigation Needed";
+}
+
+function fert(){
+let l=document.getElementById("land").value;
+let crop=document.getElementById("type").value;
+let dose=crop=="Wheat"?50:60;
+document.getElementById("fertRes").innerText="Use "+(l*dose)+" kg";
+}
+
+function water(){
+let t=document.getElementById("time").value;
+document.getElementById("waterRes").innerText="Scheduled at "+t;
+}
+
+function plan(){
+let s=document.getElementById("season").value;
+let crops=s=="Rabi"?"Wheat, Mustard":"Rice, Cotton";
+document.getElementById("planRes").innerText=crops;
+}
+
+function profit(){
+let cost=document.getElementById("cost").value;
+let y=document.getElementById("yield").value;
+let p=(y*2000)-cost;
+document.getElementById("profitRes").innerText="Profit: ₹"+p;
+}
+
+function voice(){
+let rec=new webkitSpeechRecognition();
+rec.onresult=function(e){
+let text=e.results[0][0].transcript;
+document.getElementById("voiceRes").innerText="You said: "+text;
+};
+rec.start();
+}
+
+</script>
+
+</body></html>
