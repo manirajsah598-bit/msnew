@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wins Agro Development</title>
+
+<style>
+body { font-family: Arial; margin:0; background:#eef5f1; }
+header { background:#1b5e20; color:white; padding:20px; text-align:center; }
+nav { background:#2e7d32; padding:10px; text-align:center; }
+nav a { color:white; margin:10px; text-decoration:none; font-weight:bold; }
+section { padding:20px; text-align:center; }
+video { width:300px; border-radius:10px; }
+.card { background:white; padding:15px; margin:15px auto; border-radius:10px; width:85%; }
+button { padding:10px 15px; margin:10px; background:#2e7d32; color:white; border:none; }
+input, select { padding:8px; margin:10px; }
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🌱 Wins Agro Development</h1>
+<p>AI + IoT + Smart Farming Solution</p>
+</header>
+
+<nav>
+<a href="#scan">Scan</a>
+<a href="#weather">Weather</a>
+<a href="#market">Market</a>
+<a href="#soil">Soil</a>
+<a href="#fertilizer">Fertilizer</a>
+<a href="#irrigation">Irrigation</a>
+</nav>
+
+<!-- CAMERA -->
+<section id="scan">
+<h2>📷 Crop Scanner</h2>
+<video id="camera" autoplay playsinline></video><br>
+<button onclick="startCamera()">Start Camera</button>
+<button onclick="scanCrop()">Scan</button>
+<p id="scanResult"></p>
+</section>
+
+<!-- WEATHER -->
+<section id="weather">
+<h2>🌦️ Weather Advisory</h2>
+<div class="card">
+<p id="weatherData">Click below</p>
+<button onclick="getWeather()">Get Advice</button>
+</div>
+</section>
+
+<!-- MARKET -->
+<section id="market">
+<h2>💰 Market Prediction</h2>
+<div class="card">
+<select id="crop">
+<option>Wheat</option>
+<option>Rice</option>
+<option>Maize</option>
+</select><br>
+<button onclick="predictPrice()">Predict</button>
+<p id="price"></p>
+</div>
+</section>
+
+<!-- SOIL -->
+<section id="soil">
+<h2>🌱 Soil Moisture</h2>
+<div class="card">
+<input type="number" id="moisture" placeholder="Enter %">
+<button onclick="checkSoil()">Check</button>
+<p id="soilResult"></p>
+</div>
+</section>
+
+<!-- FERTILIZER -->
+<section id="fertilizer">
+<h2>🧪 Fertilizer Calculator</h2>
+<div class="card">
+<input type="number" id="land" placeholder="Land (acre)">
+<button onclick="fertilizerCalc()">Calculate</button>
+<p id="fertResult"></p>
+</div>
+</section>
+
+<!-- IRRIGATION -->
+<section id="irrigation">
+<h2>💧 Irrigation Advice</h2>
+<div class="card">
+<button onclick="irrigation()">Get Advice</button>
+<p id="irrigationResult"></p>
+</div>
+</section>
+
+<script>
+
+// CAMERA
+function startCamera() {
+navigator.mediaDevices.getUserMedia({ video: true })
+.then(stream => {
+document.getElementById('camera').srcObject = stream;
+})
+.catch(err => alert("Camera error: " + err));
+}
+
+function scanCrop() {
+document.getElementById("scanResult").innerText =
+"Detected: Leaf Disease → Use Neem Oil";
+}
+
+// WEATHER
+function getWeather() {
+document.getElementById("weatherData").innerText =
+"Sunny ☀️ | Advice: Irrigate crops today 💧";
+}
+
+// MARKET
+function predictPrice() {
+let crop = document.getElementById("crop").value;
+document.getElementById("price").innerText =
+crop + " price: ₹2100/quintal (↑)";
+}
+
+// SOIL
+function checkSoil() {
+let m = document.getElementById("moisture").value;
+if(m < 30)
+document.getElementById("soilResult").innerText = "Low Moisture → Water needed 💧";
+else
+document.getElementById("soilResult").innerText = "Good Moisture ✅";
+}
+
+// FERTILIZER
+function fertilizerCalc() {
+let land = document.getElementById("land").value;
+let result = land * 50;
+document.getElementById("fertResult").innerText =
+"Use " + result + " kg fertilizer";
+}
+
+// IRRIGATION
+function irrigation() {
+document.getElementById("irrigationResult").innerText =
+"Irrigation needed every 2 days 💧";
+}
+
+</script>
+
+</body>
+</html>
